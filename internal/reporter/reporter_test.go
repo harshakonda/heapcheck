@@ -165,8 +165,7 @@ func TestHTMLReporter(t *testing.T) {
 		"<html",
 		"</html>",
 		"heapcheck Report",
-		"Summary",
-		"Escape Categories",
+		"chart.js",
 		"main.go",
 		"handler.go",
 	}

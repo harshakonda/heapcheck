@@ -1,121 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580">
   <!-- Browser Window -->
-  <rect width="800" height="500" rx="8" fill="#f5f5f5"/>
+  <rect width="900" height="580" rx="10" fill="#f5f5f5"/>
   
   <!-- Browser Title Bar -->
-  <rect width="800" height="40" rx="8" fill="#e8e8e8"/>
-  <circle cx="20" cy="20" r="6" fill="#ff5f56"/>
-  <circle cx="40" cy="20" r="6" fill="#ffbd2e"/>
-  <circle cx="60" cy="20" r="6" fill="#27ca41"/>
+  <rect width="900" height="40" rx="10" fill="#e0e0e0"/>
+  <circle cx="20" cy="20" r="7" fill="#ff5f56"/>
+  <circle cx="42" cy="20" r="7" fill="#ffbd2e"/>
+  <circle cx="64" cy="20" r="7" fill="#27ca41"/>
   
   <!-- URL Bar -->
-  <rect x="90" y="10" width="620" height="20" rx="4" fill="#fff"/>
-  <text x="100" y="24" font-family="Arial" font-size="11" fill="#666">file:///report.html</text>
-  
-  <!-- Content Area -->
-  <rect x="20" y="55" width="760" height="430" rx="4" fill="#fff"/>
+  <rect x="100" y="10" width="700" height="22" rx="4" fill="#fff"/>
+  <text x="115" y="25" font-family="Arial" font-size="12" fill="#666">file:///report.html</text>
   
   <!-- Title -->
-  <text x="40" y="90" font-family="Arial" font-size="24" font-weight="bold" fill="#333">📊 heapcheck Report</text>
+  <text x="30" y="80" font-family="Arial" font-size="24" font-weight="bold" fill="#333">📊 heapcheck Report</text>
   
-  <!-- Summary Card -->
-  <rect x="40" y="110" width="720" height="100" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
-  <text x="60" y="135" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Summary</text>
+  <!-- Stat Cards Row -->
+  <!-- Total Variables Card -->
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e"/>
+      <stop offset="100%" style="stop-color:#38ef7d"/>
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eb3349"/>
+      <stop offset="100%" style="stop-color:#f45c43"/>
+    </linearGradient>
+  </defs>
   
-  <!-- Stats -->
-  <g transform="translate(80, 160)">
-    <text text-anchor="middle" font-family="Arial">
-      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#2563eb">847</tspan>
-      <tspan x="0" y="20" font-size="11" fill="#666">Total Variables</tspan>
-    </text>
-  </g>
-  <g transform="translate(220, 160)">
-    <text text-anchor="middle" font-family="Arial">
-      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#22c55e">792</tspan>
-      <tspan x="0" y="20" font-size="11" fill="#666">Stack Allocated</tspan>
-    </text>
-  </g>
-  <g transform="translate(360, 160)">
-    <text text-anchor="middle" font-family="Arial">
-      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#dc2626">55</tspan>
-      <tspan x="0" y="20" font-size="11" fill="#666">Heap Allocated</tspan>
-    </text>
-  </g>
-  <g transform="translate(500, 160)">
-    <text text-anchor="middle" font-family="Arial">
-      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#2563eb">156</tspan>
-      <tspan x="0" y="20" font-size="11" fill="#666">Inlined Calls</tspan>
-    </text>
-  </g>
+  <rect x="30" y="100" width="270" height="90" rx="12" fill="url(#blueGrad)"/>
+  <text x="165" y="145" text-anchor="middle" font-family="Arial" font-size="36" font-weight="bold" fill="white">1067</text>
+  <text x="165" y="172" text-anchor="middle" font-family="Arial" font-size="14" fill="white" opacity="0.9">Total Variables</text>
   
-  <!-- Categories Card -->
-  <rect x="40" y="225" width="350" height="200" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
-  <text x="60" y="250" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Escape Categories</text>
+  <rect x="315" y="100" width="270" height="90" rx="12" fill="url(#greenGrad)"/>
+  <text x="450" y="145" text-anchor="middle" font-family="Arial" font-size="36" font-weight="bold" fill="white">89</text>
+  <text x="450" y="172" text-anchor="middle" font-family="Arial" font-size="14" fill="white" opacity="0.9">Stack Allocated</text>
+  <text x="450" y="185" text-anchor="middle" font-family="Arial" font-size="11" fill="white" opacity="0.7">8.3% ✓</text>
   
-  <!-- Category Bars -->
-  <g transform="translate(60, 270)">
-    <rect x="0" y="0" width="200" height="20" rx="4" fill="#fee2e2"/>
-    <rect x="0" y="0" width="130" height="20" rx="4" fill="#ef4444"/>
-    <text x="210" y="15" font-family="Arial" font-size="11" fill="#666">interface-boxing (41.8%)</text>
-    
-    <rect x="0" y="30" width="200" height="20" rx="4" fill="#fef3c7"/>
-    <rect x="0" y="30" width="85" height="20" rx="4" fill="#f59e0b"/>
-    <text x="210" y="45" font-family="Arial" font-size="11" fill="#666">return-pointer (27.3%)</text>
-    
-    <rect x="0" y="60" width="200" height="20" rx="4" fill="#dbeafe"/>
-    <rect x="0" y="60" width="51" height="20" rx="4" fill="#3b82f6"/>
-    <text x="210" y="75" font-family="Arial" font-size="11" fill="#666">closure-capture (16.4%)</text>
-    
-    <rect x="0" y="90" width="200" height="20" rx="4" fill="#dcfce7"/>
-    <rect x="0" y="90" width="28" height="20" rx="4" fill="#22c55e"/>
-    <text x="210" y="105" font-family="Arial" font-size="11" fill="#666">fmt-call (9.1%)</text>
-    
-    <rect x="0" y="120" width="200" height="20" rx="4" fill="#fef9c3"/>
-    <rect x="0" y="120" width="17" height="20" rx="4" fill="#eab308"/>
-    <text x="210" y="135" font-family="Arial" font-size="11" fill="#666">slice-grow (5.5%)</text>
-  </g>
+  <rect x="600" y="100" width="270" height="90" rx="12" fill="url(#redGrad)"/>
+  <text x="735" y="145" text-anchor="middle" font-family="Arial" font-size="36" font-weight="bold" fill="white">607</text>
+  <text x="735" y="172" text-anchor="middle" font-family="Arial" font-size="14" fill="white" opacity="0.9">Heap Allocated</text>
+  <text x="735" y="185" text-anchor="middle" font-family="Arial" font-size="11" fill="white" opacity="0.7">56.9% ⚠</text>
   
-  <!-- Escapes Table Card -->
-  <rect x="410" y="225" width="350" height="200" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
-  <text x="430" y="250" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Escapes</text>
+  <!-- Charts Row -->
+  <!-- Allocation Distribution Card -->
+  <rect x="30" y="210" width="420" height="240" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="50" y="245" font-family="Arial" font-size="16" font-weight="600" fill="#444">Allocation Distribution</text>
+  <line x1="50" y1="255" x2="430" y2="255" stroke="#e5e7eb" stroke-width="1"/>
   
-  <!-- Table Header -->
-  <rect x="420" y="260" width="330" height="25" fill="#f9fafb"/>
-  <text font-family="Arial" font-size="10" fill="#666" font-weight="bold">
-    <tspan x="430" y="277">Location</tspan>
-    <tspan x="540" y="277">Category</tspan>
-    <tspan x="650" y="277">Suggestion</tspan>
-  </text>
+  <!-- Doughnut Chart -->
+  <circle cx="240" cy="360" r="80" fill="none" stroke="#22c55e" stroke-width="35" stroke-dasharray="50 502" stroke-dashoffset="0"/>
+  <circle cx="240" cy="360" r="80" fill="none" stroke="#ef4444" stroke-width="35" stroke-dasharray="452 502" stroke-dashoffset="-50"/>
+  <circle cx="240" cy="360" r="50" fill="white"/>
   
-  <!-- Table Rows -->
-  <g font-family="Arial" font-size="9">
-    <text x="430" y="300" fill="#2563eb">handler.go:45</text>
-    <rect x="540" y="290" width="70" height="15" rx="3" fill="#fee2e2"/>
-    <text x="545" y="300" fill="#dc2626">interface-boxing</text>
-    <text x="650" y="300" fill="#059669">Use concrete types</text>
-    
-    <line x1="420" y1="308" x2="750" y2="308" stroke="#eee"/>
-    
-    <text x="430" y="323" fill="#2563eb">handler.go:52</text>
-    <rect x="540" y="313" width="70" height="15" rx="3" fill="#fef3c7"/>
-    <text x="545" y="323" fill="#d97706">return-pointer</text>
-    <text x="650" y="323" fill="#059669">Return by value</text>
-    
-    <line x1="420" y1="331" x2="750" y2="331" stroke="#eee"/>
-    
-    <text x="430" y="346" fill="#2563eb">store.go:23</text>
-    <rect x="540" y="336" width="70" height="15" rx="3" fill="#dbeafe"/>
-    <text x="545" y="346" fill="#2563eb">closure-capture</text>
-    <text x="650" y="346" fill="#059669">Pass as parameter</text>
-    
-    <line x1="420" y1="354" x2="750" y2="354" stroke="#eee"/>
-    
-    <text x="430" y="369" fill="#2563eb">util.go:15</text>
-    <rect x="540" y="359" width="70" height="15" rx="3" fill="#dcfce7"/>
-    <text x="545" y="369" fill="#16a34a">fmt-call</text>
-    <text x="650" y="369" fill="#059669">Use strconv</text>
-  </g>
+  <!-- Legend -->
+  <rect x="360" y="330" width="14" height="14" rx="3" fill="#22c55e"/>
+  <text x="380" y="342" font-family="Arial" font-size="12" fill="#4b5563">Stack (8.3%)</text>
+  <rect x="360" y="355" width="14" height="14" rx="3" fill="#ef4444"/>
+  <text x="380" y="367" font-family="Arial" font-size="12" fill="#4b5563">Heap (56.9%)</text>
   
-  <!-- Footer -->
-  <text x="400" y="470" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">Generated by heapcheck</text>
+  <!-- Escape Categories Card -->
+  <rect x="465" y="210" width="405" height="240" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="485" y="245" font-family="Arial" font-size="16" font-weight="600" fill="#444">Escape Categories</text>
+  <line x1="485" y1="255" x2="850" y2="255" stroke="#e5e7eb" stroke-width="1"/>
+  
+  <!-- Horizontal Bar Chart -->
+  <text x="485" y="285" font-family="Arial" font-size="11" fill="#6b7280">slice-grow</text>
+  <rect x="580" y="272" width="180" height="18" rx="4" fill="#ef4444"/>
+  <text x="770" y="285" font-family="Arial" font-size="11" fill="#374151">145</text>
+  
+  <text x="485" y="315" font-family="Arial" font-size="11" fill="#6b7280">uncategorized</text>
+  <rect x="580" y="302" width="150" height="18" rx="4" fill="#f97316"/>
+  <text x="740" y="315" font-family="Arial" font-size="11" fill="#374151">122</text>
+  
+  <text x="485" y="345" font-family="Arial" font-size="11" fill="#6b7280">return-pointer</text>
+  <rect x="580" y="332" width="100" height="18" rx="4" fill="#f59e0b"/>
+  <text x="690" y="345" font-family="Arial" font-size="11" fill="#374151">80</text>
+  
+  <text x="485" y="375" font-family="Arial" font-size="11" fill="#6b7280">interface-boxing</text>
+  <rect x="580" y="362" width="87" height="18" rx="4" fill="#eab308"/>
+  <text x="677" y="375" font-family="Arial" font-size="11" fill="#374151">70</text>
+  
+  <text x="485" y="405" font-family="Arial" font-size="11" fill="#6b7280">fmt-call</text>
+  <rect x="580" y="392" width="75" height="18" rx="4" fill="#84cc16"/>
+  <text x="665" y="405" font-family="Arial" font-size="11" fill="#374151">61</text>
+  
+  <text x="485" y="435" font-family="Arial" font-size="11" fill="#6b7280">spill</text>
+  <rect x="580" y="422" width="70" height="18" rx="4" fill="#22c55e"/>
+  <text x="660" y="435" font-family="Arial" font-size="11" fill="#374151">56</text>
+  
+  <!-- Hotspots Card -->
+  <rect x="30" y="465" width="840" height="95" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="50" y="498" font-family="Arial" font-size="16" font-weight="600" fill="#444">🔥 Hotspots</text>
+  
+  <!-- Hotspot bars -->
+  <text x="50" y="530" font-family="Arial" font-size="12" fill="#2563eb">internal/parser/parser.go</text>
+  <rect x="250" y="518" width="400" height="18" rx="4" fill="#e5e7eb"/>
+  <rect x="250" y="518" width="400" height="18" rx="4" fill="url(#redGrad)"/>
+  <text x="660" y="530" font-family="Arial" font-size="12" font-weight="600" fill="#374151">145</text>
+  
+  <text x="50" y="552" font-family="Arial" font-size="12" fill="#2563eb">internal/reporter/reporter.go</text>
+  <rect x="250" y="540" width="400" height="18" rx="4" fill="#e5e7eb"/>
+  <rect x="250" y="540" width="280" height="18" rx="4" fill="url(#redGrad)" opacity="0.8"/>
+  <text x="660" y="552" font-family="Arial" font-size="12" font-weight="600" fill="#374151">98</text>
 </svg>
