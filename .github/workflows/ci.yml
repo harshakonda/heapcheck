@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.21', '1.22', '1.23']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+    
+    - name: Build
+      run: go build -v ./...
+    
+    - name: Test
+      run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v4
+      if: matrix.go-version == '1.23'
+      with:
+        file: ./coverage.txt
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+    
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+
+  self-analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+    
+    - name: Build heapcheck
+      run: go build -o heapcheck ./cmd/heapcheck
+    
+    - name: Run heapcheck on itself
+      run: ./heapcheck ./...
+    
+    - name: Generate SARIF report
+      run: ./heapcheck --format=sarif ./... > heapcheck.sarif
+    
+    - name: Upload SARIF to GitHub
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: heapcheck.sarif
