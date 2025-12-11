@@ -46,16 +46,17 @@ changelog:
       - '^test:'
       - '^ci:'
 
-brews:
-  - name: heapcheck
-    repository:
-      owner: harshakonda
-      name: homebrew-tap
-    folder: Formula
-    homepage: https://github.com/harshakonda/heapcheck
-    description: Human-friendly Go escape analysis CLI
-    license: MIT
-    test: |
-      system "#{bin}/heapcheck", "--version"
-    install: |
-      bin.install "heapcheck"
+# Homebrew (uncomment when you create harshakonda/homebrew-tap repo)
+# brews:
+#   - name: heapcheck
+#     repository:
+#       owner: harshakonda
+#       name: homebrew-tap
+#     directory: Formula
+#     homepage: https://github.com/harshakonda/heapcheck
+#     description: Human-friendly Go escape analysis CLI
+#     license: MIT
+#     test: |
+#       system "#{bin}/heapcheck", "--version"
+#     install: |
+#       bin.install "heapcheck"
