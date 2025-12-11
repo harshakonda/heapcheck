@@ -105,7 +105,7 @@ func TestParseLeakingParam(t *testing.T) {
 func TestParseInlining(t *testing.T) {
 	input := `./main.go:15:6: can inline square
 ./main.go:35:10: inlining call to foo`
-	
+
 	results, err := Parse(input)
 	if err != nil {
 		t.Fatalf("Parse() error = %v", err)

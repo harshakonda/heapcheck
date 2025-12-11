@@ -16,13 +16,13 @@ import (
 type EscapeType int
 
 const (
-	Unknown EscapeType = iota
-	MovedToHeap      // "moved to heap: x"
-	EscapesToHeap    // "x escapes to heap"
-	DoesNotEscape    // "x does not escape"
-	LeakingParam     // "leaking param: x"
-	CanInline        // "can inline foo"
-	InliningCall     // "inlining call to foo"
+	Unknown       EscapeType = iota
+	MovedToHeap              // "moved to heap: x"
+	EscapesToHeap            // "x escapes to heap"
+	DoesNotEscape            // "x does not escape"
+	LeakingParam             // "leaking param: x"
+	CanInline                // "can inline foo"
+	InliningCall             // "inlining call to foo"
 )
 
 func (e EscapeType) String() string {

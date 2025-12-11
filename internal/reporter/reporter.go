@@ -285,9 +285,9 @@ type sarifDriver struct {
 }
 
 type sarifRule struct {
-	ID               string           `json:"id"`
-	ShortDescription sarifMessage     `json:"shortDescription"`
-	Help             sarifMessage     `json:"help"`
+	ID               string       `json:"id"`
+	ShortDescription sarifMessage `json:"shortDescription"`
+	Help             sarifMessage `json:"help"`
 }
 
 type sarifMessage struct {

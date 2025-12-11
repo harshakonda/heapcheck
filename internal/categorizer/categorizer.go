@@ -12,25 +12,25 @@ import (
 type Category string
 
 const (
-	CategoryReturnPointer     Category = "return-pointer"
-	CategoryInterfaceBoxing   Category = "interface-boxing"
-	CategoryClosureCapture    Category = "closure-capture"
-	CategoryGoroutineEscape   Category = "goroutine-escape"
-	CategoryChannelSend       Category = "channel-send"
-	CategorySliceGrow         Category = "slice-grow"
-	CategoryUnknownSize       Category = "unknown-size"
-	CategoryTooLarge          Category = "too-large"
-	CategoryFmtCall           Category = "fmt-call"
-	CategoryReflection        Category = "reflection"
-	CategoryLeakingParam      Category = "leaking-param"
-	CategoryStringConversion  Category = "string-conversion"
-	CategorySpill             Category = "spill"
-	CategoryAssignment        Category = "assignment"
-	CategoryCallParameter     Category = "call-parameter"
-	CategoryMapAllocation     Category = "map-allocation"
-	CategoryNewAllocation     Category = "new-allocation"
-	CategoryCompositeLiteral  Category = "composite-literal"
-	CategoryUncategorized     Category = "uncategorized"
+	CategoryReturnPointer    Category = "return-pointer"
+	CategoryInterfaceBoxing  Category = "interface-boxing"
+	CategoryClosureCapture   Category = "closure-capture"
+	CategoryGoroutineEscape  Category = "goroutine-escape"
+	CategoryChannelSend      Category = "channel-send"
+	CategorySliceGrow        Category = "slice-grow"
+	CategoryUnknownSize      Category = "unknown-size"
+	CategoryTooLarge         Category = "too-large"
+	CategoryFmtCall          Category = "fmt-call"
+	CategoryReflection       Category = "reflection"
+	CategoryLeakingParam     Category = "leaking-param"
+	CategoryStringConversion Category = "string-conversion"
+	CategorySpill            Category = "spill"
+	CategoryAssignment       Category = "assignment"
+	CategoryCallParameter    Category = "call-parameter"
+	CategoryMapAllocation    Category = "map-allocation"
+	CategoryNewAllocation    Category = "new-allocation"
+	CategoryCompositeLiteral Category = "composite-literal"
+	CategoryUncategorized    Category = "uncategorized"
 )
 
 // Suggestion provides optimization advice for a category
@@ -58,9 +58,9 @@ type Summary struct {
 
 // Results holds the complete categorization results
 type Results struct {
-	Summary    Summary                  `json:"summary"`
-	ByCategory map[Category]int         `json:"byCategory"`
-	Escapes    []CategorizedEscape      `json:"escapes"`
+	Summary    Summary             `json:"summary"`
+	ByCategory map[Category]int    `json:"byCategory"`
+	Escapes    []CategorizedEscape `json:"escapes"`
 }
 
 // suggestions maps categories to their suggestions

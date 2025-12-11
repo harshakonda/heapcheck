@@ -16,8 +16,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/harshakonda/heapcheck/internal/parser"
 	"github.com/harshakonda/heapcheck/internal/categorizer"
+	"github.com/harshakonda/heapcheck/internal/parser"
 	"github.com/harshakonda/heapcheck/internal/reporter"
 )
 
@@ -154,9 +154,9 @@ func run(cfg *Config) error {
 
 func filterEscapesOnly(results *categorizer.Results) *categorizer.Results {
 	filtered := &categorizer.Results{
-		Summary:  results.Summary,
+		Summary:    results.Summary,
 		ByCategory: results.ByCategory,
-		Escapes:  make([]categorizer.CategorizedEscape, 0),
+		Escapes:    make([]categorizer.CategorizedEscape, 0),
 	}
 	for _, e := range results.Escapes {
 		if e.Info.EscapeType == parser.MovedToHeap || e.Info.EscapeType == parser.EscapesToHeap {
