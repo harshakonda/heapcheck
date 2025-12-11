@@ -5,9 +5,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/harshakonda/heapcheck)](https://goreportcard.com/report/github.com/harshakonda/heapcheck)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**heapcheck** is a developer-friendly CLI tool that makes Go's escape analysis output human-readable with actionable optimization suggestions.
+**heapcheck** is a developer-friendly CLI tool that transforms Go's cryptic escape analysis output into human-readable reports with actionable optimization suggestions.
 
-## The Problem
+<p align="center">
+  <img src="docs/images/heapcheck-terminal.svg" alt="heapcheck terminal output" width="700">
+</p>
+
+## 🎯 Why heapcheck?
 
 Go's compiler escape analysis is powerful but cryptic:
 
@@ -21,7 +25,7 @@ $ go build -gcflags="-m" ./...
 
 **What does this mean? Why did `z` move to heap? How do I fix it?**
 
-## The Solution
+### With heapcheck:
 
 ```bash
 $ heapcheck ./...
@@ -31,15 +35,16 @@ $ heapcheck ./...
 
 Summary:
   Total variables analyzed: 847
-  Stack allocated:          792 (93.5%)
+  Stack allocated:          792 (93.5%) ✅
   Heap allocated:            55 (6.5%) ⚠️
+  Inlined calls:            156
 
 Escape Causes:
-  1. interface-boxing      23 (41.8%)
-  2. return-pointer        15 (27.3%)
-  3. closure-capture        9 (16.4%)
-  4. goroutine-escape       5 (9.1%)
-  5. unknown-size           3 (5.5%)
+  1. interface-boxing      23 (41.8%)  → Use concrete types or generics
+  2. return-pointer        15 (27.3%)  → Return by value if struct ≤ 64 bytes
+  3. closure-capture        9 (16.4%)  → Pass as parameter instead
+  4. fmt-call               5 (9.1%)   → Use strconv in hot paths
+  5. slice-grow             3 (5.5%)   → Pre-allocate capacity
 
 Hotspots (files with most escapes):
   pkg/server/handler.go                      12 escapes
@@ -49,80 +54,376 @@ Hotspots (files with most escapes):
 Run with -v for detailed breakdown of all 55 escapes.
 ```
 
-## Installation
+## 📦 Installation
 
 ```bash
 go install github.com/harshakonda/heapcheck/cmd/heapcheck@latest
 ```
 
-Or with Homebrew (coming soon):
-
+Verify installation:
 ```bash
-brew install heapcheck
+heapcheck --version
+# heapcheck version 0.1.0
 ```
 
-## Usage
+## 🚀 Quick Start
 
-### Basic Usage
+### Step 1: Analyze Your Project
 
 ```bash
-# Analyze all packages in current module
+cd your-go-project
 heapcheck ./...
+```
 
-# Analyze specific package
-heapcheck ./pkg/server
+### Step 2: Get Detailed Report
 
-# Verbose output with all details
+```bash
+# Verbose mode - see every escape with suggestions
 heapcheck -v ./...
 ```
 
-### Output Formats
+### Step 3: Generate Visual HTML Report
 
 ```bash
-# Human-readable text (default)
-heapcheck ./...
-
-# JSON for CI/CD integration
-heapcheck --format=json ./...
-
-# HTML visual report
 heapcheck --format=html ./... > report.html
+open report.html  # or xdg-open on Linux
+```
 
-# SARIF for GitHub Code Scanning
+---
+
+## 📊 Output Formats
+
+heapcheck supports 4 output formats for different use cases:
+
+### 1. Text (Default) - Human Readable
+
+```bash
+heapcheck ./...
+```
+
+Best for: Quick analysis, terminal usage
+
+### 2. JSON - Machine Readable
+
+```bash
+heapcheck --format=json ./... > report.json
+```
+
+<details>
+<summary>📋 Example JSON output</summary>
+
+```json
+{
+  "summary": {
+    "total": 847,
+    "stackAllocated": 792,
+    "heapAllocated": 55,
+    "inlinedCalls": 156
+  },
+  "byCategory": {
+    "interface-boxing": 23,
+    "return-pointer": 15,
+    "closure-capture": 9,
+    "fmt-call": 5,
+    "slice-grow": 3
+  },
+  "escapes": [
+    {
+      "file": "pkg/server/handler.go",
+      "line": 45,
+      "column": 12,
+      "variable": "req",
+      "category": "interface-boxing",
+      "reason": "req escapes to heap",
+      "suggestion": {
+        "short": "Use concrete types in hot paths",
+        "details": "Assigning to interface{} causes heap allocation..."
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+Best for: CI/CD pipelines, custom tooling, data analysis
+
+### 3. HTML - Visual Report
+
+```bash
+heapcheck --format=html ./... > report.html
+```
+
+<p align="center">
+  <img src="docs/images/html-report-preview.svg" alt="HTML Report Preview" width="600">
+</p>
+
+Features:
+- 📈 Summary statistics with visual indicators
+- 🔍 Sortable table of all escapes
+- 📁 File-by-file breakdown with line numbers
+- 💡 Inline optimization suggestions
+- 🎨 Clean, printable design
+
+Best for: Code reviews, sharing with team, documentation
+
+### 4. SARIF - GitHub Code Scanning
+
+```bash
 heapcheck --format=sarif ./... > results.sarif
 ```
 
-### Filtering
+Best for: GitHub Security tab integration, PR annotations
+
+---
+
+## 🔬 Step-by-Step Workflows
+
+### Workflow 1: Finding Memory Hotspots
 
 ```bash
-# Show only heap escapes (hide "does not escape")
-heapcheck --escapes-only ./...
+# Step 1: Get overview
+heapcheck ./...
 
-# Filter by package path
+# Step 2: Focus on worst file
 heapcheck --filter=pkg/server ./...
+
+# Step 3: Get details for that file
+heapcheck -v --filter=pkg/server/handler.go ./...
+
+# Step 4: Generate report for team review
+heapcheck --format=html --filter=pkg/server ./... > server-escapes.html
 ```
 
-## Escape Categories
+### Workflow 2: CI/CD Integration
 
-heapcheck categorizes escapes by their cause and provides optimization suggestions:
+```bash
+# In your CI pipeline:
 
-| Category | Description | Suggestion |
-|----------|-------------|------------|
-| `return-pointer` | Returns pointer to local variable | Return by value if struct ≤ 64 bytes |
-| `interface-boxing` | Assigned to `interface{}` | Use concrete types or generics |
-| `closure-capture` | Captured by closure | Pass as parameter instead |
-| `goroutine-escape` | Passed to goroutine | Use worker pools |
-| `channel-send` | Sent over channel | Consider sync.Pool |
-| `slice-grow` | Slice may grow | Pre-allocate capacity |
-| `unknown-size` | Size unknown at compile time | Use fixed-size arrays |
-| `fmt-call` | Passed to fmt functions | Use strconv in hot paths |
+# Step 1: Run analysis
+heapcheck --format=json ./... > heapcheck.json
 
-## CI/CD Integration
+# Step 2: Check escape count threshold
+ESCAPES=$(jq '.summary.heapAllocated' heapcheck.json)
+if [ "$ESCAPES" -gt 100 ]; then
+  echo "❌ Too many heap escapes: $ESCAPES"
+  exit 1
+fi
+
+# Step 3: Upload SARIF for GitHub annotations
+heapcheck --format=sarif ./... > results.sarif
+```
+
+### Workflow 3: Before/After Optimization
+
+```bash
+# Before optimization
+heapcheck --format=json ./... > before.json
+
+# Make your changes...
+
+# After optimization
+heapcheck --format=json ./... > after.json
+
+# Compare
+echo "Before: $(jq '.summary.heapAllocated' before.json) escapes"
+echo "After:  $(jq '.summary.heapAllocated' after.json) escapes"
+```
+
+---
+
+## 📂 Real-World Examples
+
+See the [`examples/`](examples/) directory for tested projects:
+
+| Example | Description | What You'll Learn |
+|---------|-------------|-------------------|
+| [basic-patterns](examples/basic-patterns/) | Common escape patterns | All escape categories demonstrated |
+| [http-server](examples/http-server/) | HTTP API server | Interface boxing in handlers |
+| [worker-pool](examples/worker-pool/) | Concurrent workers | Closure captures in goroutines |
+| [json-processor](examples/json-processor/) | JSON processing | Slice growth, reflection |
+
+### Running Examples
+
+```bash
+# Analyze basic patterns
+cd examples/basic-patterns
+heapcheck ./...
+heapcheck -v ./...  # detailed view
+
+# Generate HTML report
+heapcheck --format=html ./... > report.html
+open report.html
+```
+
+---
+
+## 🏷️ Escape Categories
+
+heapcheck categorizes escapes into 19 categories with actionable suggestions:
+
+| Category | Description | Suggestion | Impact |
+|----------|-------------|------------|--------|
+| `return-pointer` | Returns `&localVar` | Return by value if ≤64 bytes | 🔴 High |
+| `interface-boxing` | Assigned to `interface{}` | Use generics (Go 1.18+) | 🔴 High |
+| `closure-capture` | Captured by closure | Pass as parameter | 🔴 High |
+| `goroutine-escape` | Passed to goroutine | Use worker pools | 🟡 Medium |
+| `channel-send` | Sent over channel | Consider sync.Pool | 🟡 Medium |
+| `slice-grow` | Slice append/growth | Pre-allocate capacity | 🟡 Medium |
+| `fmt-call` | Used in fmt.Printf etc | Use strconv in hot paths | 🟡 Medium |
+| `map-allocation` | `make(map[K]V)` | Maps always heap allocate | 🟢 Low |
+| `unknown-size` | `make([]T, n)` variable n | Use fixed arrays if possible | 🟢 Low |
+| `reflection` | Uses reflect package | Avoid in hot paths | 🔴 High |
+
+<details>
+<summary>📋 See all 19 categories</summary>
+
+| Category | Description |
+|----------|-------------|
+| `return-pointer` | Returning pointer to local variable |
+| `interface-boxing` | Assigning to interface{} |
+| `closure-capture` | Variable captured by closure |
+| `goroutine-escape` | Passed to goroutine |
+| `channel-send` | Sent on channel |
+| `slice-grow` | Slice may grow via append |
+| `unknown-size` | Size unknown at compile time |
+| `too-large` | Struct too large for stack |
+| `fmt-call` | Passed to fmt functions |
+| `reflection` | Uses reflect package |
+| `leaking-param` | Parameter escapes function |
+| `string-conversion` | string([]byte) conversion |
+| `spill` | Compiler spilled to heap |
+| `assignment` | Assigned to escaping location |
+| `call-parameter` | Escapes via function call |
+| `map-allocation` | make(map[K]V) |
+| `new-allocation` | new(T) |
+| `composite-literal` | &Struct{} literal |
+| `uncategorized` | Couldn't determine reason |
+
+</details>
+
+---
+
+## 🔧 Common Escape Patterns & Fixes
+
+### Pattern 1: Returning Pointers
+
+```go
+// ❌ ESCAPES - pointer to local variable
+func newUser() *User {
+    u := User{Name: "test"}
+    return &u  // moved to heap!
+}
+
+// ✅ NO ESCAPE - return by value (for small structs)
+func newUser() User {
+    return User{Name: "test"}  // stays on stack
+}
+
+// ✅ NO ESCAPE - caller provides storage
+func initUser(u *User) {
+    u.Name = "test"  // caller controls allocation
+}
+```
+
+**heapcheck output:**
+```
+pkg/user.go:12:9 return-pointer
+  Variable: u
+  Suggestion: Return by value if struct size ≤ 64 bytes
+```
+
+### Pattern 2: Interface Boxing
+
+```go
+// ❌ ESCAPES - interface boxing
+func process(items []Item) {
+    for _, item := range items {
+        fmt.Println(item)  // item boxed to interface{}
+    }
+}
+
+// ✅ NO ESCAPE - use concrete types
+func process(items []Item) {
+    for _, item := range items {
+        log.Print(item.String())  // no boxing
+    }
+}
+
+// ✅ NO ESCAPE - use generics (Go 1.18+)
+func process[T fmt.Stringer](items []T) {
+    for _, item := range items {
+        _ = item.String()  // no boxing
+    }
+}
+```
+
+### Pattern 3: Closure Captures
+
+```go
+// ❌ ESCAPES - closure captures variable
+func processAll(items []Item) {
+    for _, item := range items {
+        go func() {
+            handle(item)  // item escapes!
+        }()
+    }
+}
+
+// ✅ NO ESCAPE - pass as parameter
+func processAll(items []Item) {
+    for _, item := range items {
+        go func(it Item) {
+            handle(it)  // parameter, no escape
+        }(item)
+    }
+}
+```
+
+### Pattern 4: Slice Pre-allocation
+
+```go
+// ❌ MAY ESCAPE - slice grows unpredictably
+func collect(n int) []Result {
+    var results []Result
+    for i := 0; i < n; i++ {
+        results = append(results, process(i))
+    }
+    return results
+}
+
+// ✅ BETTER - pre-allocate capacity
+func collect(n int) []Result {
+    results := make([]Result, 0, n)  // known capacity
+    for i := 0; i < n; i++ {
+        results = append(results, process(i))
+    }
+    return results
+}
+```
+
+### Pattern 5: fmt vs strconv
+
+```go
+// ❌ ESCAPES - fmt causes interface boxing
+func formatID(id int) string {
+    return fmt.Sprintf("%d", id)  // boxing!
+}
+
+// ✅ NO ESCAPE - strconv is allocation-free
+func formatID(id int) string {
+    return strconv.Itoa(id)  // no boxing
+}
+```
+
+---
+
+## 🔄 CI/CD Integration
 
 ### GitHub Actions
 
 ```yaml
-name: Heap Check
+name: Escape Analysis
 on: [push, pull_request]
 
 jobs:
@@ -139,13 +440,24 @@ jobs:
       - name: Install heapcheck
         run: go install github.com/harshakonda/heapcheck/cmd/heapcheck@latest
       
-      - name: Run heapcheck
-        run: heapcheck --format=sarif ./... > results.sarif
+      - name: Run Analysis
+        run: |
+          heapcheck ./... 
+          heapcheck --format=sarif ./... > results.sarif
       
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
+      
+      - name: Check Threshold
+        run: |
+          ESCAPES=$(heapcheck --format=json ./... | jq '.summary.heapAllocated')
+          echo "Heap escapes: $ESCAPES"
+          if [ "$ESCAPES" -gt 100 ]; then
+            echo "::error::Too many heap escapes!"
+            exit 1
+          fi
 ```
 
 ### GitLab CI
@@ -153,101 +465,154 @@ jobs:
 ```yaml
 heapcheck:
   stage: lint
+  image: golang:1.22
   script:
     - go install github.com/harshakonda/heapcheck/cmd/heapcheck@latest
+    - heapcheck ./...
     - heapcheck --format=json ./... > heapcheck.json
   artifacts:
-    reports:
-      codequality: heapcheck.json
+    paths:
+      - heapcheck.json
 ```
 
-## Understanding Escape Analysis
+### Pre-commit Hook
+
+```bash
+#!/bin/bash
+# Save as .git/hooks/pre-commit and chmod +x
+
+echo "🔍 Running heapcheck..."
+heapcheck ./...
+
+ESCAPES=$(heapcheck --format=json ./... | jq '.summary.heapAllocated')
+if [ "$ESCAPES" -gt 50 ]; then
+    echo "⚠️  Warning: $ESCAPES heap escapes detected"
+fi
+```
+
+---
+
+## 📚 Understanding Escape Analysis
 
 ### Why Does It Matter?
 
-- **Stack allocations are fast**: Just moving a pointer, automatically freed
-- **Heap allocations are slow**: GC overhead, memory fragmentation
-- **GC pressure**: More heap allocations = more GC pauses = higher latency
+| Allocation Type | Speed | GC Impact | When Freed |
+|-----------------|-------|-----------|------------|
+| **Stack** | ~1 ns | None | Function return |
+| **Heap** | ~25 ns | GC overhead | When unreachable |
 
-### Common Escape Patterns
+**In hot paths, heap allocations can:**
+- ⏱️ Increase latency by 25x per allocation
+- 🛑 Cause GC pauses (stop-the-world)
+- 🧩 Fragment memory
+- 📉 Reduce cache efficiency
 
-#### 1. Returning Pointers
+### When to Optimize?
 
-```go
-// ❌ Escapes - pointer to local
-func newUser() *User {
-    u := User{Name: "test"}
-    return &u  // escapes!
-}
-
-// ✅ No escape - return by value
-func newUser() User {
-    return User{Name: "test"}
-}
+```
+                ┌─────────────────────────────────┐
+                │   Should I optimize this?       │
+                └─────────────────────────────────┘
+                               │
+                               ▼
+                ┌─────────────────────────────────┐
+                │  Is it in a hot path?           │
+                │  (called frequently)            │
+                └─────────────────────────────────┘
+                      │                    │
+                     YES                   NO
+                      │                    │
+                      ▼                    ▼
+         ┌─────────────────────┐   ┌─────────────────┐
+         │ Profile first!      │   │ Don't optimize  │
+         │ Use pprof to        │   │ (premature      │
+         │ confirm it matters  │   │  optimization)  │
+         └─────────────────────┘   └─────────────────┘
+                      │
+                      ▼
+         ┌─────────────────────┐
+         │ Use heapcheck to    │
+         │ identify escapes    │
+         │ Apply fix patterns  │
+         └─────────────────────┘
 ```
 
-#### 2. Interface Boxing
+### Recommended Optimization Workflow
 
-```go
-// ❌ Escapes - interface boxing
-func log(msg interface{}) { ... }
-log(myStruct)  // escapes!
+1. **Benchmark first**: `go test -bench=. -benchmem`
+2. **Profile**: `go tool pprof`  
+3. **Identify escapes**: `heapcheck -v ./...`
+4. **Fix patterns**: Apply suggestions from heapcheck
+5. **Verify improvement**: Re-benchmark
 
-// ✅ No escape - concrete type or generics
-func log[T any](msg T) { ... }
-log(myStruct)
-```
+---
 
-#### 3. Closure Capture
+## 🧪 Try It Out
 
-```go
-// ❌ Escapes - captured by closure
-func process(data []byte) {
-    go func() {
-        use(data)  // data escapes!
-    }()
-}
-
-// ✅ No escape - pass as parameter
-func process(data []byte) {
-    go func(d []byte) {
-        use(d)
-    }(data)
-}
-```
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Development
+### Self-Analysis
 
 ```bash
-# Clone the repository
+# heapcheck analyzing itself!
 git clone https://github.com/harshakonda/heapcheck
 cd heapcheck
-
-# Run tests
-go test ./...
-
-# Build
-go build ./cmd/heapcheck
-
-# Test on a sample project
-./heapcheck ./testdata/...
+go build -o heapcheck ./cmd/heapcheck
+./heapcheck ./...
 ```
 
-## License
+### Analyze Popular Projects
+
+```bash
+# Analyze gin web framework
+git clone https://github.com/gin-gonic/gin /tmp/gin
+heapcheck /tmp/gin/...
+
+# Analyze cobra CLI library
+git clone https://github.com/spf13/cobra /tmp/cobra
+heapcheck /tmp/cobra/...
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+
+```bash
+git clone https://github.com/harshakonda/heapcheck
+cd heapcheck
+go test ./...
+go build -o heapcheck ./cmd/heapcheck
+./heapcheck ./...
+```
+
+### Areas for Contribution
+
+- 🎨 Improve HTML report visualizations
+- 📊 Add more escape categories  
+- 🧪 Add example projects
+- 📖 Documentation improvements
+- 🐛 Bug fixes
+
+---
+
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## Related Tools
+---
 
-- [staticcheck](https://staticcheck.io/) - Go static analysis
-- [pprof](https://go.dev/blog/pprof) - Profiling Go programs
-- [go-torch](https://github.com/uber-archive/go-torch) - Flame graphs
+## 🔗 Related Resources
 
-## Acknowledgments
+- [Go Escape Analysis FAQ](https://go.dev/doc/faq#stack_or_heap)
+- [Understanding Allocations in Go](https://go.dev/blog/ismmkeynote)
+- [pprof - Go Profiler](https://go.dev/blog/pprof)
+- [staticcheck - Go Static Analysis](https://staticcheck.io/)
 
-- Go team for the excellent `-gcflags -m` escape analysis
-- [ICSE 2020 paper](https://dl.acm.org/doi/10.1145/3377813.3381368) on Go escape analysis optimization
+---
+
+<p align="center">
+  Made with ❤️ for the Go community<br>
+  ⭐ Star this repo if you find it useful!
+</p>

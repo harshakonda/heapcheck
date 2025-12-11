@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520">
+  <!-- Terminal Window -->
+  <rect width="800" height="520" rx="10" fill="#1e1e1e"/>
+  
+  <!-- Title Bar -->
+  <rect width="800" height="35" rx="10" fill="#323232"/>
+  <circle cx="20" cy="17" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="17" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="17" r="6" fill="#27ca41"/>
+  <text x="400" y="22" text-anchor="middle" fill="#888" font-family="monospace" font-size="13">heapcheck — bash</text>
+  
+  <!-- Terminal Content -->
+  <text font-family="Monaco, Consolas, monospace" font-size="13" fill="#fff">
+    <tspan x="20" y="60" fill="#0f0">$</tspan>
+    <tspan fill="#fff"> heapcheck ./...</tspan>
+    
+    <tspan x="20" y="95" fill="#888">📊 heapcheck - Escape Analysis Report</tspan>
+    <tspan x="20" y="115" fill="#555">──────────────────────────────────────────────────</tspan>
+    
+    <tspan x="20" y="145" fill="#888">Summary:</tspan>
+    <tspan x="20" y="165" fill="#fff">  Total variables analyzed: </tspan><tspan fill="#5af">847</tspan>
+    <tspan x="20" y="185" fill="#fff">  Stack allocated:          </tspan><tspan fill="#5f5">792 (93.5%) ✅</tspan>
+    <tspan x="20" y="205" fill="#fff">  Heap allocated:           </tspan><tspan fill="#f55">55 (6.5%) ⚠️</tspan>
+    <tspan x="20" y="225" fill="#fff">  Inlined calls:            </tspan><tspan fill="#5af">156</tspan>
+    
+    <tspan x="20" y="255" fill="#888">Escape Causes:</tspan>
+    <tspan x="20" y="275" fill="#fff">  1. </tspan><tspan fill="#f5a">interface-boxing</tspan><tspan fill="#fff">      23 (41.8%)</tspan>
+    <tspan x="20" y="295" fill="#fff">  2. </tspan><tspan fill="#fa5">return-pointer</tspan><tspan fill="#fff">        15 (27.3%)</tspan>
+    <tspan x="20" y="315" fill="#fff">  3. </tspan><tspan fill="#5af">closure-capture</tspan><tspan fill="#fff">        9 (16.4%)</tspan>
+    <tspan x="20" y="335" fill="#fff">  4. </tspan><tspan fill="#5f5">fmt-call</tspan><tspan fill="#fff">               5 (9.1%)</tspan>
+    <tspan x="20" y="355" fill="#fff">  5. </tspan><tspan fill="#ff5">slice-grow</tspan><tspan fill="#fff">             3 (5.5%)</tspan>
+    
+    <tspan x="20" y="385" fill="#888">Hotspots (files with most escapes):</tspan>
+    <tspan x="20" y="405" fill="#5af">  pkg/server/handler.go</tspan><tspan fill="#fff">                      12 escapes</tspan>
+    <tspan x="20" y="425" fill="#5af">  pkg/cache/store.go</tspan><tspan fill="#fff">                          8 escapes</tspan>
+    <tspan x="20" y="445" fill="#5af">  internal/util/strings.go</tspan><tspan fill="#fff">                    6 escapes</tspan>
+    
+    <tspan x="20" y="480" fill="#555">Run with -v for detailed breakdown of all 55 escapes.</tspan>
+    
+    <tspan x="20" y="505" fill="#0f0">$</tspan>
+    <tspan fill="#fff"> █</tspan>
+  </text>
+</svg>

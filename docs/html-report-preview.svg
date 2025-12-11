@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Browser Window -->
+  <rect width="800" height="500" rx="8" fill="#f5f5f5"/>
+  
+  <!-- Browser Title Bar -->
+  <rect width="800" height="40" rx="8" fill="#e8e8e8"/>
+  <circle cx="20" cy="20" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="20" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="20" r="6" fill="#27ca41"/>
+  
+  <!-- URL Bar -->
+  <rect x="90" y="10" width="620" height="20" rx="4" fill="#fff"/>
+  <text x="100" y="24" font-family="Arial" font-size="11" fill="#666">file:///report.html</text>
+  
+  <!-- Content Area -->
+  <rect x="20" y="55" width="760" height="430" rx="4" fill="#fff"/>
+  
+  <!-- Title -->
+  <text x="40" y="90" font-family="Arial" font-size="24" font-weight="bold" fill="#333">📊 heapcheck Report</text>
+  
+  <!-- Summary Card -->
+  <rect x="40" y="110" width="720" height="100" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="60" y="135" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Summary</text>
+  
+  <!-- Stats -->
+  <g transform="translate(80, 160)">
+    <text text-anchor="middle" font-family="Arial">
+      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#2563eb">847</tspan>
+      <tspan x="0" y="20" font-size="11" fill="#666">Total Variables</tspan>
+    </text>
+  </g>
+  <g transform="translate(220, 160)">
+    <text text-anchor="middle" font-family="Arial">
+      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#22c55e">792</tspan>
+      <tspan x="0" y="20" font-size="11" fill="#666">Stack Allocated</tspan>
+    </text>
+  </g>
+  <g transform="translate(360, 160)">
+    <text text-anchor="middle" font-family="Arial">
+      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#dc2626">55</tspan>
+      <tspan x="0" y="20" font-size="11" fill="#666">Heap Allocated</tspan>
+    </text>
+  </g>
+  <g transform="translate(500, 160)">
+    <text text-anchor="middle" font-family="Arial">
+      <tspan x="0" y="0" font-size="28" font-weight="bold" fill="#2563eb">156</tspan>
+      <tspan x="0" y="20" font-size="11" fill="#666">Inlined Calls</tspan>
+    </text>
+  </g>
+  
+  <!-- Categories Card -->
+  <rect x="40" y="225" width="350" height="200" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="60" y="250" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Escape Categories</text>
+  
+  <!-- Category Bars -->
+  <g transform="translate(60, 270)">
+    <rect x="0" y="0" width="200" height="20" rx="4" fill="#fee2e2"/>
+    <rect x="0" y="0" width="130" height="20" rx="4" fill="#ef4444"/>
+    <text x="210" y="15" font-family="Arial" font-size="11" fill="#666">interface-boxing (41.8%)</text>
+    
+    <rect x="0" y="30" width="200" height="20" rx="4" fill="#fef3c7"/>
+    <rect x="0" y="30" width="85" height="20" rx="4" fill="#f59e0b"/>
+    <text x="210" y="45" font-family="Arial" font-size="11" fill="#666">return-pointer (27.3%)</text>
+    
+    <rect x="0" y="60" width="200" height="20" rx="4" fill="#dbeafe"/>
+    <rect x="0" y="60" width="51" height="20" rx="4" fill="#3b82f6"/>
+    <text x="210" y="75" font-family="Arial" font-size="11" fill="#666">closure-capture (16.4%)</text>
+    
+    <rect x="0" y="90" width="200" height="20" rx="4" fill="#dcfce7"/>
+    <rect x="0" y="90" width="28" height="20" rx="4" fill="#22c55e"/>
+    <text x="210" y="105" font-family="Arial" font-size="11" fill="#666">fmt-call (9.1%)</text>
+    
+    <rect x="0" y="120" width="200" height="20" rx="4" fill="#fef9c3"/>
+    <rect x="0" y="120" width="17" height="20" rx="4" fill="#eab308"/>
+    <text x="210" y="135" font-family="Arial" font-size="11" fill="#666">slice-grow (5.5%)</text>
+  </g>
+  
+  <!-- Escapes Table Card -->
+  <rect x="410" y="225" width="350" height="200" rx="8" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="430" y="250" font-family="Arial" font-size="14" font-weight="bold" fill="#666">Escapes</text>
+  
+  <!-- Table Header -->
+  <rect x="420" y="260" width="330" height="25" fill="#f9fafb"/>
+  <text font-family="Arial" font-size="10" fill="#666" font-weight="bold">
+    <tspan x="430" y="277">Location</tspan>
+    <tspan x="540" y="277">Category</tspan>
+    <tspan x="650" y="277">Suggestion</tspan>
+  </text>
+  
+  <!-- Table Rows -->
+  <g font-family="Arial" font-size="9">
+    <text x="430" y="300" fill="#2563eb">handler.go:45</text>
+    <rect x="540" y="290" width="70" height="15" rx="3" fill="#fee2e2"/>
+    <text x="545" y="300" fill="#dc2626">interface-boxing</text>
+    <text x="650" y="300" fill="#059669">Use concrete types</text>
+    
+    <line x1="420" y1="308" x2="750" y2="308" stroke="#eee"/>
+    
+    <text x="430" y="323" fill="#2563eb">handler.go:52</text>
+    <rect x="540" y="313" width="70" height="15" rx="3" fill="#fef3c7"/>
+    <text x="545" y="323" fill="#d97706">return-pointer</text>
+    <text x="650" y="323" fill="#059669">Return by value</text>
+    
+    <line x1="420" y1="331" x2="750" y2="331" stroke="#eee"/>
+    
+    <text x="430" y="346" fill="#2563eb">store.go:23</text>
+    <rect x="540" y="336" width="70" height="15" rx="3" fill="#dbeafe"/>
+    <text x="545" y="346" fill="#2563eb">closure-capture</text>
+    <text x="650" y="346" fill="#059669">Pass as parameter</text>
+    
+    <line x1="420" y1="354" x2="750" y2="354" stroke="#eee"/>
+    
+    <text x="430" y="369" fill="#2563eb">util.go:15</text>
+    <rect x="540" y="359" width="70" height="15" rx="3" fill="#dcfce7"/>
+    <text x="545" y="369" fill="#16a34a">fmt-call</text>
+    <text x="650" y="369" fill="#059669">Use strconv</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="470" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">Generated by heapcheck</text>
+</svg>
