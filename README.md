@@ -77,7 +77,7 @@ If you use this tool in academic work, scientific publications, or technical rep
   doi          = {10.5281/zenodo.17895742},
   url          = {https://doi.org/10.5281/zenodo.17895742}
 }
-
+```
 
 ## 📦 Installation
 
