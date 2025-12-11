@@ -54,6 +54,31 @@ Hotspots (files with most escapes):
 Run with -v for detailed breakdown of all 55 escapes.
 ```
 
+## 🔬 For Researchers
+
+**heapcheck** is designed to be fully citable research software.  
+If you use this tool in academic work, scientific publications, or technical reports, please cite the archived Zenodo release using the DOI below.
+
+[![DOI](https://zenodo.org/badge/1114227633.svg)](https://doi.org/10.5281/zenodo.17895742)
+
+### 📄 How to Cite
+
+**Konda, S. H. (2025). _heapcheck: Human-Friendly Go Escape Analysis CLI_ (Version 0.1.3). Zenodo. https://doi.org/10.5281/zenodo.17895742**
+
+### BibTeX
+
+```bibtex
+@software{konda2025heapcheck,
+  author       = {Konda, Sri Harsha},
+  title        = {heapcheck: Human-Friendly Go Escape Analysis CLI},
+  year         = {2025},
+  publisher    = {Zenodo},
+  version      = {0.1.3},
+  doi          = {10.5281/zenodo.17895742},
+  url          = {https://doi.org/10.5281/zenodo.17895742}
+}
+
+
 ## 📦 Installation
 
 ```bash
