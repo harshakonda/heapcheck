@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "heapcheck: Human-Friendly Go Escape Analysis CLI"
+version: 0.1.1
+date-released: 2025-12-11
+url: "https://github.com/harshakonda/heapcheck"
+repository-code: "https://github.com/harshakonda/heapcheck"
+license: MIT
+
+authors:
+  - family-names: Konda
+    given-names: Sri Harsha
+    orcid: "https://orcid.org/0009-0009-7810-9130"
+
+keywords:
+  - go
+  - golang
+  - escape-analysis
+  - performance
+  - memory-optimization
+  - developer-tools
+  - cli
+
+preferred-citation:
+  type: software
+  title: "heapcheck"
+  authors:
+    - family-names: Konda
+      given-names: Sri Harsha
+      orcid: "https://orcid.org/0009-0009-7810-9130"
+  year: 2025
+  version: "0.1.1"
+
+abstract: >
+  heapcheck transforms Go's cryptic escape analysis output into
+  human-readable reports with actionable optimization suggestions.
+  It categorizes heap allocations into 19 escape patterns and
+  provides specific fixes for each, helping developers reduce
+  memory allocations and improve application performance.
