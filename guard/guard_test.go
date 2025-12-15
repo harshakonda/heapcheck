@@ -40,7 +40,7 @@ func TestCheck_Checkpoint(t *testing.T) {
 	g.Checkpoint("after allocation")
 
 	// Phase 2
-	data = nil
+	_ = nil
 	g.Checkpoint("after nil")
 
 	g.Verify()

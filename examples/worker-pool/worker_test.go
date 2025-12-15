@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"sync"
 	"testing"
 	"time"
 
@@ -42,19 +43,31 @@ func TestWorkerPool(t *testing.T) {
 	pool.Submit(Task{ID: 1, Payload: []byte("task1")})
 	pool.Submit(Task{ID: 2, Payload: []byte("task2")})
 
-	// Collect results
-	results := make([]Result, 0, 2)
+	// Collect results with proper synchronization
+	var results []Result
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		for r := range pool.Results() {
+			mu.Lock()
 			results = append(results, r)
+			mu.Unlock()
 		}
 	}()
 
-	// Close and wait
+	// Close and wait for collection to finish
 	pool.Close()
+	wg.Wait()
 
-	if len(results) != 2 {
-		t.Errorf("expected 2 results, got %d", len(results))
+	mu.Lock()
+	resultCount := len(results)
+	mu.Unlock()
+
+	if resultCount != 2 {
+		t.Errorf("expected 2 results, got %d", resultCount)
 	}
 }
 
