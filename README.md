@@ -15,6 +15,30 @@
 - **Test integration** - simple API to add memory checks to your tests (goleak-compatible)
 - **Multiple output formats** - text, JSON, HTML, and SARIF for CI/CD integration
 
+## Quick Reference
+
+heapcheck provides two types of analysis:
+
+| Analysis Type | Command | What it does |
+|---------------|---------|--------------|
+| **Static escape analysis** | `heapcheck ./...` | Shows heap allocations at compile time |
+| **Runtime leak detection** | `go test ./...` | Detects goroutine/memory leaks during tests |
+
+**Important:** Runtime leak detection only works if your tests use `guard.VerifyNone(t)`. Regular tests without guard do not detect leaks.
+
+```go
+// Without guard - NO leak detection
+func TestMyFunction(t *testing.T) {
+    result := myFunction()  // Could leak goroutines, you'd never know!
+}
+
+// With guard - leak detection ENABLED
+func TestMyFunction(t *testing.T) {
+    defer guard.VerifyNone(t)  // ← Enables leak detection
+    result := myFunction()     // Leaks will fail the test
+}
+```
+
 ## The Problem
 
 Go's compiler escape analysis is powerful but cryptic:
@@ -186,9 +210,6 @@ go test ./...
 
 # Run with verbose output (shows checkpoints and leak details)
 go test -v ./...
-
-# Run example tests
-go test ./examples/...
 ```
 
 ### What Failure Looks Like
@@ -204,6 +225,14 @@ When a leak is detected, the test fails with details:
         github.com/myapp/worker.(*Pool).worker(...)
             /app/worker/pool.go:45
         ...
+```
+
+When tests pass, it means no leaks were detected:
+
+```
+--- PASS: TestMyFunction (0.11s)
+PASS
+ok      github.com/myapp/pkg    1.048s
 ```
 
 ## Runtime Analysis
@@ -384,7 +413,7 @@ Konda, S. H. (2025). *heapcheck: Unified Memory Analysis for Go*. Zenodo. https:
   title        = {heapcheck: Unified Memory Analysis for Go},
   year         = {2025},
   publisher    = {Zenodo},
-  version      = {0.2.0},
+  version      = {1.0.2},
   doi          = {10.5281/zenodo.17895742},
   url          = {https://doi.org/10.5281/zenodo.17895742}
 }
